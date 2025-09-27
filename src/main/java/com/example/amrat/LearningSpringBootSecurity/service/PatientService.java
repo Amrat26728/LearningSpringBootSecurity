@@ -22,8 +22,7 @@ public class PatientService {
 
     @Transactional
     public PatientResponseDto getPatientById(Long patientId) {
-        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new EntityNotFoundException("Patient Not " +
-                "Found with id: " + patientId));
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new EntityNotFoundException("Patient Not Found with id: " + patientId));
         return modelMapper.map(patient, PatientResponseDto.class);
     }
 
