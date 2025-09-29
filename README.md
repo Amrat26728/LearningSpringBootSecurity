@@ -1,2 +1,2 @@
 # LearningSpringBootSecurity
-All about spring boot security, username/password, JWT auth, OAth2
+All about spring boot security, username/password, JWT auth, OAuth2
