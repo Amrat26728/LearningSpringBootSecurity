@@ -1,13 +1,14 @@
 package com.example.amrat.LearningSpringBootSecurity.controller;
 
+import com.example.amrat.LearningSpringBootSecurity.dto.DoctorResponseDto;
+import com.example.amrat.LearningSpringBootSecurity.dto.OnboardDoctorRequestDto;
 import com.example.amrat.LearningSpringBootSecurity.dto.PatientResponseDto;
+import com.example.amrat.LearningSpringBootSecurity.service.DoctorService;
 import com.example.amrat.LearningSpringBootSecurity.service.PatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class AdminController {
 
     private final PatientService patientService;
+    private final DoctorService doctorService;
 
     @GetMapping("/patients")
     public ResponseEntity<List<PatientResponseDto>> getAllPatients(
@@ -24,5 +26,10 @@ public class AdminController {
             @RequestParam(value = "size", defaultValue = "10") Integer pageSize
     ) {
         return ResponseEntity.ok(patientService.getAllPatients(pageNumber, pageSize));
+    }
+
+    @PostMapping("/onBoardNewDoctor")
+    public ResponseEntity<DoctorResponseDto> onBoardNewDoctor(@RequestBody OnboardDoctorRequestDto onboardDoctorDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(doctorService.onBoardNewDoctor(onboardDoctorDto));
     }
 }

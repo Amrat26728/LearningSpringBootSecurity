@@ -1,9 +1,11 @@
 package com.example.amrat.LearningSpringBootSecurity.controller;
 
 import com.example.amrat.LearningSpringBootSecurity.dto.AppointmentResponseDto;
+import com.example.amrat.LearningSpringBootSecurity.entity.User;
 import com.example.amrat.LearningSpringBootSecurity.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +21,9 @@ public class DoctorController {
 
     @GetMapping("/appointments")
     public ResponseEntity<List<AppointmentResponseDto>> getAllAppointmentsOfDoctor() {
-        return ResponseEntity.ok(appointmentService.getAllAppointmentsOfDoctor(1L));
+        // this user is currently logged-in user
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(appointmentService.getAllAppointmentsOfDoctor(user.getId()));
     }
 
 }

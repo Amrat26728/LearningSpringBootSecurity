@@ -1,7 +1,8 @@
 package com.example.amrat.LearningSpringBootSecurity.controller;
 
-import com.example.amrat.LearningSpringBootSecurity.dto.LoginAndSignupRequestDto;
+import com.example.amrat.LearningSpringBootSecurity.dto.LoginRequestDto;
 import com.example.amrat.LearningSpringBootSecurity.dto.LoginResponseDto;
+import com.example.amrat.LearningSpringBootSecurity.dto.SignupRequestDto;
 import com.example.amrat.LearningSpringBootSecurity.dto.SignupResponseDto;
 import com.example.amrat.LearningSpringBootSecurity.security.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginAndSignupRequestDto loginRequestDto){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
         return ResponseEntity.ok(authService.login(loginRequestDto));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> signup(@RequestBody LoginAndSignupRequestDto signupRequestDto){
+    public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto signupRequestDto){
         return ResponseEntity.ok(authService.signup(signupRequestDto));
     }
 
