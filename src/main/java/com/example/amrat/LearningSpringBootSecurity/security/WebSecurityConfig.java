@@ -1,5 +1,6 @@
 package com.example.amrat.LearningSpringBootSecurity.security;
 
+import com.example.amrat.LearningSpringBootSecurity.entity.type.PermissionType;
 import com.example.amrat.LearningSpringBootSecurity.entity.type.RoleType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,10 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,6 +30,7 @@ import java.io.IOException;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -40,6 +44,7 @@ public class WebSecurityConfig {
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**", "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**").hasAnyAuthority(PermissionType.USER_MANAGE.name())
                         .requestMatchers("/admin/**").hasRole(RoleType.ADMIN.name())
                         .requestMatchers("/doctors/**").hasAnyRole(RoleType.DOCTOR.name(), RoleType.ADMIN.name())
                         .anyRequest().authenticated()

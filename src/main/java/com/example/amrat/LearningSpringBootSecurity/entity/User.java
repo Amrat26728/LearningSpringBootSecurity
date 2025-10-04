@@ -3,6 +3,7 @@ package com.example.amrat.LearningSpringBootSecurity.entity;
 
 import com.example.amrat.LearningSpringBootSecurity.entity.type.AuthProviderType;
 import com.example.amrat.LearningSpringBootSecurity.entity.type.RoleType;
+import com.example.amrat.LearningSpringBootSecurity.security.RolePermissionMapping;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,13 +51,23 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 //        return List.of();
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
-                .collect(Collectors.toSet());
-
         // Difference b/w Role and Authority
         // A role is just a special type of authority with the prefix "ROLE_". Example: "ROLE_ADMIN", "ROLE_PATIENT".
         // An authority is the most basic permission string in Spring Security. Example: "READ_PRIVILEGE", "WRITE_PRIVILEGE".
+//        return roles.stream()
+//                .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
+//                .collect(Collectors.toSet());
+
+        // fetching authorities for each role of user
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        roles.forEach(
+                role -> {
+                    Set<SimpleGrantedAuthority> permissions = RolePermissionMapping.getAuthoritiesForRole(role);
+                    authorities.addAll(permissions);
+                    authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+                }
+        );
+        return authorities;
     }
 
     @Override
